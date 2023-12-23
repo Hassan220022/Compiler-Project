@@ -6,8 +6,9 @@
 #include <string.h>
 #include <ctype.h>
 
-#include "string.h"
 /*FUNCTIONS PROTOCAL*/
+
+char *parse_for_loop(char *code);
 
 /* Check if a word is a reserved word */
 
