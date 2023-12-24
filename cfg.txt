@@ -1,0 +1,14 @@
+program     ::= statement
+statement   ::= "for" "(" initialization ";" condition ";" update ")" block
+initialization ::= data_type identifier "=" expression ";"
+condition   ::= expression
+update      ::= identifier "++" | identifier "--"
+block       ::= "{" statements "}"
+statements  ::= statement statements | ε
+expression  ::= term expression'
+expression' ::= "+" term expression' | "-" term expression' | ε
+term        ::= factor term'
+term'       ::= "*" factor term' | "/" factor term' | ε
+factor      ::= identifier | constant | "(" expression ")"
+data_type   ::= "int" | "float" | "char"
+constant    ::= integer_constant | real_constant | string_literal

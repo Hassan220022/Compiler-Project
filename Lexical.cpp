@@ -1,39 +1,4 @@
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
-#include <stdbool.h>
-#define MAX_LENGTH 1000
-
-enum TokenType
-{
-	KEYWORD,
-	IDENTIFIER,
-	CONSTANT,
-	OPERATOR,
-	WHITESPACE,
-	DIRECTIVE,
-	OTHER
-};
-
-enum Keyword
-{
-	INT,
-	FLOAT,
-	CHAR,
-	IF,
-	ELSE,
-	WHILE,
-	FOR,
-	RETURN,
-	DEFINE,
-	NONE
-};
-
-struct Tokens
-{
-	enum TokenType type;
-	enum Keyword value;
-};
+#include "main.h"
 
 bool isDelimiter(char ch)
 {
@@ -142,69 +107,64 @@ char *subString(char *buffer, int left, int right)
 	subStr[right - left + 1] = '\0';
 	return (subStr);
 }
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
-void Tokenize(FILE *file)
+
+TokenArray Tokenize(FILE *file)
 {
-	char buffer[MAX_LENGTH];
-	struct Tokens token;
+    char buffer[MAX_LENGTH];
+    TokenArray result;
+    result.tokens = NULL;
+    result.count = 0;
 
-	while (fscanf(file, "%s", buffer) != EOF)
-	{
-		memset(&token, 0, sizeof(token)); // Reset token
+    while (fscanf(file, "%s", buffer) != EOF)
+    {
+        int left = 0, right = 0;
+        int len = strlen(buffer);
 
-		int left = 0, right = 0;
-		int len = strlen(buffer);
+        while (right <= len && left <= right)
+        {
+            if (!isDelimiter(buffer[right]) && !isSymbol(buffer[right]))
+                right++;
 
-		while (right <= len && left <= right)
-		{
-			if (!isDelimiter(buffer[right]) && !isSymbol(buffer[right]))
-				right++;
+            if ((isDelimiter(buffer[right]) || isSymbol(buffer[right])) && left == right)
+            {
+                right++;
+                left = right;
+            }
+            else if (isDelimiter(buffer[right]) || isSymbol(buffer[right]) || (right == len && left != right))
+            {
+                char *subStr = subString(buffer, left, right - 1);
 
-			if ((isDelimiter(buffer[right]) || isSymbol(buffer[right])) && left == right)
-			{
-				// Check for operators and symbols, skip if neither
-				if (isOperator(buffer[right]))
-					printf("'%c' IS AN OPERATOR\n", buffer[right]);
-				else if (isSymbol(buffer[right]))
-					printf("'%c' IS A SYMBOL\n", buffer[right]);
+                // Skip if subStr is empty
+                if (strlen(subStr) > 0)
+                {
+                    result.tokens = realloc(result.tokens, sizeof(char*) * (result.count + 1));
+                    result.tokens[result.count] = subStr;
+                    result.count++;
+                }
+                else
+                {
+                    free(subStr);
+                }
 
-				right++;
-				left = right;
-			}
-			else if (isDelimiter(buffer[right]) || isSymbol(buffer[right]) || (right == len && left != right))
-			{
-				char *subStr = subString(buffer, left, right - 1);
+                left = right;
+            }
+        }
+    }
 
-				// Skip if subStr is empty
-				if (strlen(subStr) > 0)
-				{
-					if (isKeyword(subStr))
-						printf("'%s' IS A KEYWORD\n", subStr);
-					else if (isStringLiteral(subStr))
-						printf("'%s' IS A STRING LITERAL\n", subStr);
-					else if (isInteger(subStr))
-						printf("'%s' IS AN INTEGER\n", subStr);
-					else if (isRealNumber(subStr))
-						printf("'%s' IS A REAL NUMBER\n", subStr);
-					else if (validIdentifier(subStr))
-						printf("'%s' IS A VALID IDENTIFIER\n", subStr);
-					else
-						printf("'%s' IS NOT A VALID IDENTIFIER\n", subStr);
-				}
+    fclose(file);
 
-				free(subStr);
-				left = right;
-			}
-		}
-	}
-	fclose(file);
+    return result;
 }
 
-int main()
-{
-	char code[] = "for (int X = 0; X <= 100; X++) { Sum += X; }";
-	char **tokens = tokenize(code);
-	parse(tokens);
-	free(tokens);
-	return 0;
-}
+// int main()
+// {
+// 	char code[] = "for (int X = 0; X <= 100; X++) { Sum += X; }";
+// 	char **tokens = tokenize(code);
+// 	parse(tokens);
+// 	free(tokens);
+// 	return 0;
+// }
