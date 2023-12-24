@@ -521,3 +521,91 @@ ExprNode *parseExpression()
 	return NULL;
 }
 
+int main()
+{
+	// Test createExpressionNode
+	ExprNode *node = createExpressionNode('+', 0, NULL);
+	printf("createExpressionNode: %c\n", node->operation);
+	free(node); // Don't forget to free the memory!
+
+	// Test isIdentifier
+	printf("isIdentifier(\"myVar\"): %d\n", isIdentifier("myVar"));
+
+	// Test isConstant
+	printf("isConstant(\"123\"): %d\n", isConstant("123"));
+
+	// Test getNextToken
+	char *token = getNextToken();
+	printf("getNextToken: %s\n", token);
+	free(token); // Don't forget to free the memory!
+
+	// Test parseStatement
+	StmtNode *stmt = parseStatement();
+	if (stmt != NULL)
+	{
+		printf("parseStatement: %s\n", stmt->type);
+		free(stmt); // Don't forget to free the memory!
+	}
+	else
+	{
+		printf("parseStatement: NULL\n");
+	}
+
+	// Test ungetToken
+	ungetToken("myToken");
+
+	// Test parseProgram
+	ProgramNode *program = parseProgram();
+	if (program != NULL)
+	{
+		printf("parseProgram: %d statements\n", program->numStatements);
+		// Don't forget to free the memory!
+		for (int i = 0; i < program->numStatements; i++)
+		{
+			free(program->statements[i]);
+		}
+		free(program->statements);
+		free(program);
+	}
+	else
+	{
+		printf("parseProgram: NULL\n");
+	}
+
+	// Test createExprNode
+	ExprNode *expr = createExprNode('*', 123, "myVar");
+	printf("createExprNode: %c\n", expr->operation);
+	free(expr); // Don't forget to free the memory!
+
+	// Test freeExprTree
+	ExprNode *root = createExprNode('+', 0, NULL);
+	root->left = createExprNode('\0', 123, "myVar");
+	root->right = createExprNode('\0', 456, "myVar2");
+	freeExprTree(root);
+
+	// Test parseExpression
+	ExprNode *parsedExpr = parseExpression();
+	if (parsedExpr != NULL)
+	{
+		printf("parseExpression: %c\n", parsedExpr->operation);
+		freeExprTree(parsedExpr); // Don't forget to free the memory!
+	}
+	else
+	{
+		printf("parseExpression: NULL\n");
+	}
+
+	// Test parsePrintStatement
+	StmtNode *printStmt = parsePrintStatement();
+	if (printStmt != NULL)
+	{
+		printf("parsePrintStatement: %s\n", printStmt->type);
+		free(printStmt); // Don't forget to free the memory!
+	}
+	else
+	{
+		printf("parsePrintStatement: NULL\n");
+	}
+
+	return 0;
+}

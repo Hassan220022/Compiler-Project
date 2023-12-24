@@ -111,60 +111,106 @@ char *subString(char *buffer, int left, int right)
 #include <stdlib.h>
 #include <string.h>
 
-
 TokenArray Tokenize(FILE *file)
 {
-    char buffer[MAX_LENGTH];
-    TokenArray result;
-    result.tokens = NULL;
-    result.count = 0;
+	char buffer[MAX_LENGTH];
+	TokenArray result;
+	result.tokens = NULL;
+	result.count = 0;
 
-    while (fscanf(file, "%s", buffer) != EOF)
-    {
-        int left = 0, right = 0;
-        int len = strlen(buffer);
+	while (fscanf(file, "%s", buffer) != EOF)
+	{
+		int left = 0, right = 0;
+		int len = strlen(buffer);
 
-        while (right <= len && left <= right)
-        {
-            if (!isDelimiter(buffer[right]) && !isSymbol(buffer[right]))
-                right++;
+		while (right <= len && left <= right)
+		{
+			if (!isDelimiter(buffer[right]) && !isSymbol(buffer[right]))
+				right++;
 
-            if ((isDelimiter(buffer[right]) || isSymbol(buffer[right])) && left == right)
-            {
-                right++;
-                left = right;
-            }
-            else if (isDelimiter(buffer[right]) || isSymbol(buffer[right]) || (right == len && left != right))
-            {
-                char *subStr = subString(buffer, left, right - 1);
+			if ((isDelimiter(buffer[right]) || isSymbol(buffer[right])) && left == right)
+			{
+				right++;
+				left = right;
+			}
+			else if (isDelimiter(buffer[right]) || isSymbol(buffer[right]) || (right == len && left != right))
+			{
+				char *subStr = subString(buffer, left, right - 1);
 
-                // Skip if subStr is empty
-                if (strlen(subStr) > 0)
-                {
-                    result.tokens = realloc(result.tokens, sizeof(char*) * (result.count + 1));
-                    result.tokens[result.count] = subStr;
-                    result.count++;
-                }
-                else
-                {
-                    free(subStr);
-                }
+				// Skip if subStr is empty
+				if (strlen(subStr) > 0)
+				{
+					result.tokens = realloc(result.tokens, sizeof(char *) * (result.count + 1));
+					result.tokens[result.count] = subStr;
+					result.count++;
+				}
+				else
+				{
+					free(subStr);
+				}
 
-                left = right;
-            }
-        }
-    }
+				left = right;
+			}
+		}
+	}
 
-    fclose(file);
+	fclose(file);
 
-    return result;
+	return result;
 }
 
-// int main()
-// {
-// 	char code[] = "for (int X = 0; X <= 100; X++) { Sum += X; }";
-// 	char **tokens = tokenize(code);
-// 	parse(tokens);
-// 	free(tokens);
-// 	return 0;
-// }
+int main()
+{
+	// Test isDelimiter
+	printf("isDelimiter(' '): %d\n", isDelimiter(' '));
+
+	// Test isSymbol
+	printf("isSymbol('+'): %d\n", isSymbol('+'));
+
+	// Test isOperator
+	printf("isOperator('*'): %d\n", isOperator('*'));
+
+	// Test validIdentifier
+	printf("validIdentifier(\"myVar\"): %d\n", validIdentifier("myVar"));
+
+	// Test isStringLiteral
+	printf("isStringLiteral(\"\\\"hello\\\"\"): %d\n", isStringLiteral("\"hello\""));
+
+	// Test isKeyword
+	printf("isKeyword(\"if\"): %d\n", isKeyword("if"));
+
+	// Test isInteger
+	printf("isInteger(\"123\"): %d\n", isInteger("123"));
+
+	// Test isFileName
+	printf("isFileName(\"file.txt\"): %d\n", isFileName("file.txt"));
+
+	// Test isRealNumber
+	printf("isRealNumber(\"123.45\"): %d\n", isRealNumber("123.45"));
+
+	// Test subString
+	char *sub = subString("Hello, world!", 0, 4);
+	printf("subString(\"Hello, world!\", 0, 4): %s\n", sub);
+	free(sub); // Don't forget to free the memory!
+
+	// Test Tokenize
+	FILE *file = fopen("test.txt", "r");
+	if (file != NULL)
+	{
+		TokenArray tokens = Tokenize(file);
+		printf("Tokenize: %d tokens found\n", tokens.count);
+		// Don't forget to free the memory!
+		for (int i = 0; i < tokens.count; i++)
+		{
+			free(tokens.tokens[i]);
+		}
+		free(tokens.tokens);
+		fclose(file);
+	}
+	else
+	{
+		printf("Failed to open file\n");
+	}
+
+	return 0;
+}
