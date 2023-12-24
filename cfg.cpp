@@ -80,7 +80,6 @@ int main()
 	struct CFG cfg;
 	cfg.numRules = 0;
 
-
 	loadCFG(&cfg, "cfg.txt");
 
 	const char *inputString = "for (int i = 0; i < 10; i++) { printf('Hello, world!'); }";
@@ -100,7 +99,7 @@ int main()
 
 /**
  * cfg.txt
- * 
+ *
  * program     ::= statement
  * statement   ::= "for" "(" initialization ";" condition ";" update ")" block
  * initialization ::= data_type identifier "=" expression ";"
@@ -115,5 +114,4 @@ int main()
  * factor      ::= identifier | constant | "(" expression ")"
  * data_type   ::= "int" | "float" | "char"
  * constant    ::= integer_constant | real_constant | string_literal
-
-*/
+ */
