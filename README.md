@@ -1,26 +1,24 @@
-## Compiler Project
+Compiler Project
 
 A compiler is a crucial tool in software development. It is like a translator for computer programs, converting high-level source code written by developers into machine code that computers can understand and execute. The process of compilation is divided into several phases, and the first three are particularly significant.
 
-## A) General Phases
-
-  1. Phase 1 (Lexical Analyzer):
-     Convert source code into a set of tokens.
-     1.1 Reserved words
-     1.2 Special Symbols
-     1.3 Numbers
-     1.4 Identifiers
-     1.5 Comments
-     
-  2. Context Free Grammar (CFG):
-     To be able to continue to the next phases, you have to design an appropriate CFG. The CFG has to be as general as possible for the structure of the given statement only.
-     
-  3. Phase 2 (Syntax Analyzer):
-     Focusing on the code's structure and forming an abstract syntax tree.
-     
-  4. Phase 3 (Semantic Analyzer):
-     Check the code's meaning and context to ensure it aligns with the language's semantics. These initial phases pave the way for the compiler to understand the code's structure and meaning.
-
+# A) General Phases
+1. Phase 1 (Lexical Analyzer):
+   Convert source code into a set of tokens.
+   1.1 Reserved words
+   1.2 Special Symbols
+   1.3 Numbers
+   1.4 Identifiers
+   1.5 Comments
+   
+2. Context Free Grammar (CFG):
+   To be able to continue to the next phases, you have to design an appropriate CFG. The CFG has to be as general as possible for the structure of the given statement only.
+   
+3. Phase 2 (Syntax Analyzer):
+   Focusing on the code's structure and forming an abstract syntax tree.
+   
+4. Phase 3 (Semantic Analyzer):
+   Check the code's meaning and context to ensure it aligns with the language's semantics. These initial phases pave the way for the compiler to understand the code's structure and meaning.
 
                               IF (X < Y) {X++} 
 
