@@ -1,7 +1,3 @@
-Certainly! Below is a rewritten README file for your Compiler Project:
-
----
-
 # Compiler Project
 
 A compiler is an essential tool in software development, acting as a translator for high-level source code into machine-readable instructions. This project focuses on implementing a compiler for a For-loop statement, covering crucial phases of compilation.
