@@ -155,7 +155,7 @@ ExprNode *parseExpression()
 
 // Function to parse a statement
 
-StmtNode *parseStatement()
+StmtNode *parseStatement(SymbolTable *symbolTable)
 {
 	// Get the next token
 	char *token = getNextToken();
@@ -196,6 +196,34 @@ StmtNode *parseStatement()
 	{
 		printf("Error: Expected ;, got %s\n", token);
 		return NULL;
+	}
+
+	// Check for variable declaration
+	if (strcmp(token, "int") == 0 || strcmp(token, "float") == 0 || strcmp(token, "char") == 0)
+	{
+		// Check if the variable is already declared
+		if (checkVariableInSymbolTable(symbolTable, stmtNode->expression->identifier))
+		{
+			printf("Error: Variable '%s' is already declared.\n", stmtNode->expression->identifier);
+			exit(1);
+		}
+
+		// Add the variable to the symbol table
+		addToSymbolTable(symbolTable, stmtNode->expression->identifier, token);
+	}
+
+	// Check for function declaration
+	if (strcmp(token, "function") == 0)
+	{
+		// Check if the function is already declared
+		if (checkFunctionInSymbolTable(symbolTable, stmtNode->expression->identifier, stmtNode->expression->left->type))
+		{
+			printf("Error: Function '%s' is already declared.\n", stmtNode->expression->identifier);
+			exit(1);
+		}
+
+		// Add the function to the symbol table
+		addToSymbolTable(symbolTable, stmtNode->expression->identifier, stmtNode->expression->left->type);
 	}
 
 	return stmtNode;
@@ -323,8 +351,7 @@ ExprNode *parseExpression()
 		return exprNode;
 	}
 }
-
-StmtNode *parseAssignmentStatement()
+StmtNode *parseAssignmentStatement(SymbolTable *symbolTable)
 {
 	char *token = getNextToken();
 
@@ -336,6 +363,14 @@ StmtNode *parseAssignmentStatement()
 	}
 
 	char *variableName = strdup(token);
+
+	// Check if the variable is already declared
+	if (!checkVariableInSymbolTable(symbolTable, variableName))
+	{
+		printf("Error: Variable '%s' not declared.\n", variableName);
+		free(variableName);
+		return NULL;
+	}
 
 	token = getNextToken();
 
@@ -363,7 +398,7 @@ StmtNode *parseAssignmentStatement()
 	return stmtNode;
 }
 
-StmtNode *parsePrintStatement()
+StmtNode *parsePrintStatement(SymbolTable *symbolTable)
 {
 	char *token = getNextToken();
 
@@ -371,6 +406,13 @@ StmtNode *parsePrintStatement()
 	if (token == NULL || !isIdentifier(token))
 	{
 		printf("Error: Expected identifier, got '%s'\n", token);
+		return NULL;
+	}
+
+	// Check if the variable is already declared
+	if (!checkVariableInSymbolTable(symbolTable, token))
+	{
+		printf("Error: Variable '%s' not declared.\n", token);
 		return NULL;
 	}
 
@@ -390,8 +432,29 @@ StmtNode *parsePrintStatement()
 	return stmtNode;
 }
 
+StmtNode *parseFunctionDeclarationStatement(SymbolTable *symbolTable, char *returnType, char *identifier)
+{
+	// Check if the function is already declared
+	if (checkVariableInSymbolTable(symbolTable, identifier))
+	{
+		printf("Error: Function '%s' is already declared.\n", identifier);
+		return NULL;
+	}
+
+	// Add the function to the symbol table
+	addToSymbolTable(symbolTable, identifier, returnType);
+
+	// Create a StmtNode for the function declaration
+	StmtNode *stmtNode = (StmtNode *)malloc(sizeof(StmtNode));
+	stmtNode->type = strdup(returnType); // Store the return type of the function
+	stmtNode->expression = (ExprNode *)malloc(sizeof(ExprNode));
+	stmtNode->expression->identifier = strdup(identifier); // Store the name of the function
+
+	return stmtNode;
+}
+
 // Recursive descent parsing for statements
-StmtNode *parseStatement()
+StmtNode *parseStatement(SymbolTable *symbolTable)
 {
 	char *token = getNextToken();
 
@@ -403,12 +466,37 @@ StmtNode *parseStatement()
 	else if (strcmp(token, "let") == 0)
 	{
 		// Assignment statement
-		return parseAssignmentStatement();
+		return parseAssignmentStatement(symbolTable);
 	}
 	else if (strcmp(token, "print") == 0)
 	{
 		// Print statement
-		return parsePrintStatement();
+		return parsePrintStatement(symbolTable);
+	}
+	else if (strcmp(token, "int") == 0 || strcmp(token, "float") == 0 || strcmp(token, "char") == 0)
+	{
+		// Variable declaration
+		char *identifier = getNextToken();
+		if (checkVariableInSymbolTable(symbolTable, identifier))
+		{
+			printf("Error: Variable '%s' is already declared.\n", identifier);
+			exit(1);
+		}
+		addToSymbolTable(symbolTable, identifier, token);
+		return parseFunctionDeclarationStatement(symbolTable, token, identifier);
+	}
+	else if (strcmp(token, "function") == 0)
+	{
+		// Function declaration
+		char *returnType = getNextToken();
+		char *identifier = getNextToken();
+		if (checkFunctionInSymbolTable(symbolTable, identifier, returnType))
+		{
+			printf("Error: Function '%s' is already declared.\n", identifier);
+			exit(1);
+		}
+		addToSymbolTable(symbolTable, identifier, returnType);
+		return parseFunctionDeclarationStatement(symbolTable, returnType, identifier);
 	}
 	else
 	{
