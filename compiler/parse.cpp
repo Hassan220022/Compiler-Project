@@ -381,18 +381,6 @@ StmtNode *parseStatement(SymbolTable *symbolTable)
 	}
 }
 
-// Function to create a new expression node
-ExprNode *createExprNode(char op, int val, const char *id)
-{
-	ExprNode *node = (ExprNode *)malloc(sizeof(ExprNode));
-	node->operation = op;
-	node->value = val;
-	node->identifier = strdup(id);
-	node->left = NULL;
-	node->right = NULL;
-	return node;
-}
-
 // Function to free the memory used by an expression tree
 void freeExprTree(ExprNode *root)
 {
@@ -480,22 +468,22 @@ int main()
 	}
 	free(program);
 
-	// Test createExprNode
-	ExprNode *expr = createExprNode('*', 123, "myVar");
+	// Test createExpressionNode
+	ExprNode *expr = createExpressionNode('*', 123, "myVar");
 	if (expr == NULL || expr->operation != '*')
 	{
-		printf("createExprNode failed\n");
+		printf("createExpressionNode failed\n");
 	}
 	else
 	{
-		printf("createExprNode passed\n");
+		printf("createExpressionNode passed\n");
 	}
 	free(expr);
 
 	// Test freeExprTree
-	ExprNode *root = createExprNode('+', 0, NULL);
-	root->left = createExprNode('\0', 123, "myVar");
-	root->right = createExprNode('\0', 456, "myVar2");
+	ExprNode *root = createExpressionNode('+', 0, NULL);
+	root->left = createExpressionNode('\0', 123, "myVar");
+	root->right = createExpressionNode('\0', 456, "myVar2");
 	freeExprTree(root);
 
 	// Test parseExpression
