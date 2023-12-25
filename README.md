@@ -1,58 +1,56 @@
-Compiler Project
+Certainly! Below is a rewritten README file for your Compiler Project:
 
-A compiler is a crucial tool in software development. It is like a translator for computer programs, converting high-level source code written by developers into machine code that computers can understand and execute. The process of compilation is divided into several phases, and the first three are particularly significant.
+---
 
-# A) General Phases
-1. Phase 1 (Lexical Analyzer):
-   Convert source code into a set of tokens.
-   1.1 Reserved words
-   1.2 Special Symbols
-   1.3 Numbers
-   1.4 Identifiers
-   1.5 Comments
-   
-2. Context Free Grammar (CFG):
-   To be able to continue to the next phases, you have to design an appropriate CFG. The CFG has to be as general as possible for the structure of the given statement only.
-   
-3. Phase 2 (Syntax Analyzer):
-   Focusing on the code's structure and forming an abstract syntax tree.
-   
-4. Phase 3 (Semantic Analyzer):
-   Check the code's meaning and context to ensure it aligns with the language's semantics. These initial phases pave the way for the compiler to understand the code's structure and meaning.
+# Compiler Project
 
-                              IF (X < Y) {X++} 
+A compiler is an essential tool in software development, acting as a translator for high-level source code into machine-readable instructions. This project focuses on implementing a compiler for a For-loop statement, covering crucial phases of compilation.
 
-                                    High level language
+## General Phases
 
-                             Lexical Analyzer
+### Phase 1 (Lexical Analyzer)
 
-                                     Tokenizer
-                             Syntax Analyzer   +    CFG
-                                     Parser
-                             Semantic AnalyzerSemantic Tree
-
-B) The Parser
- • The parser required for this project is Parse Tree.
- • This type of parser is a geometrical representation of the derived string.
+In this phase, the source code is transformed into a set of tokens, including reserved words, special symbols, numbers, identifiers, and comments.
 
-C) The Statement
+### Context-Free Grammar (CFG)
 
- • The statement to be implemented in this project is the For-loop statement.
+To progress to subsequent phases, a well-designed CFG is crucial. The CFG must be tailored to the specific structure of the given statement.
 
-                  For (int X = 0; X<= 100; X++) 
-                  {
-                     Sum+=X
-                  }
+### Phase 2 (Syntax Analyzer)
 
-D) REQUIRMENTS 
-     • You must show (print) each of the inputs and outputs for each phase.
-     • You must print the designed C.F.G that is fed to the required parser.
-     • You must make a briefly discussing report for this project, which includes:
-       1. A simple pseudo-code or flowchart of your design. You don’t have to go into the 
-        details of every bit of your design.
-       2. A screenshot of the inputs and outputs mentioned above.
-       3. Fill out the tasks and responsibilities of each member of the team.
-       4. Upload your full source code archived in a non-password protected ZIP archive 
-        file. The naming of the file shall be “<Group#> - <Project#>.zip”.
-        ▪ If your group# is J and the project# is 1., the file name will be J – 1.zip
-
+This phase emphasizes the code's structure, constructing an abstract syntax tree.
+
+### Phase 3 (Semantic Analyzer)
+
+Checking the code's meaning and context to ensure alignment with the language's semantics. These initial phases enable the compiler to comprehend the code's structure and meaning.
+
+### Example: `IF (X < Y) {X++}`
+
+- High-level language
+  - Lexical Analyzer (Tokenizer)
+  - Syntax Analyzer (CFG, Parser)
+  - Semantic Analyzer -> Semantic Tree
+
+## The Parser
+
+This project requires a Parse Tree parser, providing a geometrical representation of the derived string.
+
+## The Statement
+
+The specific statement implemented in this project is the For-loop statement.
+
+```c
+For (int X = 0; X <= 100; X++) 
+{
+    Sum += X;
+}
+```
+
+## Requirements
+
+- Display inputs and outputs for each phase.
+- Print the designed CFG used by the parser.
+- Provide a brief project report, including:
+  - Simple pseudo-code or flowchart of the design.
+  - Screenshots of mentioned inputs and outputs.
+---

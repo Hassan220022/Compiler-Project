@@ -1,0 +1,52 @@
+Structure Definitions:
+        struct ExprNode {
+            char operation
+            int value
+            char* identifier
+            ExprNode* left
+            ExprNode* right
+        }
+        
+        struct StmtNode {
+            char* type
+            ExprNode* expression
+        }
+        
+        struct ProgramNode {
+            StmtNode** statements
+            int numStatements
+            SymbolTable symbolTable
+        }
+        
+        struct FunctionInfo {
+            char name[MAX_SYMBOLS]
+            char returnType[MAX_SYMBOLS]
+        }
+        
+        struct SymbolTable {
+            VariableInfo variables[MAX_SYMBOLS]
+            int numVariables
+            FunctionInfo functions[MAX_SYMBOLS]
+            int numFunctions
+        }
+        
+Function Declarations:
+    ExprNode* createExpressionNode(char operation, int value, char* identifier)
+    int isIdentifier(const char* token)
+    int isConstant(const char* token)
+    char* getNextToken()
+    ExprNode* parseExpression()
+    StmtNode* parseStatement(SymbolTable* symbolTable)
+    void ungetToken(char* token)
+    ProgramNode* parseProgram()
+    void freeProgram(ProgramNode* programNode)
+    void initializeSymbolTable(SymbolTable* symbolTable)
+    void addToSymbolTable(SymbolTable* symbolTable, const char* name, const char* type)
+    int checkVariableInSymbolTable(SymbolTable* symbolTable, const char* name)
+    int checkFunctionInSymbolTable(SymbolTable* symbolTable, const char* name, const char* returnType)
+
+// Main Function
+int main() {
+    // Test functions and functionality of each function 
+    // ...
+}
