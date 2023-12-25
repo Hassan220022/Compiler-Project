@@ -45,6 +45,8 @@ For (int X = 0; X <= 100; X++)
     Sum += X;
 }
 ```
+## SIC Machine
+The Simplified Instructional Computer (SIC) machine is a hypothetical computer architecture introduced by Leland Beck. It's a simplified model used for educational purposes. The SIC machine includes various instructions and features to demonstrate fundamental concepts of computer organization and programming.
 
 ## Requirements
 
