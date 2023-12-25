@@ -46,7 +46,7 @@ int main()
 
 	/*Adressing*/
 
-	fpr = fopen("new_input.txt", "r");
+	fpr = fopen("testfile.txt", "r");
 	fpw = fopen("addressed_file.txt", "w");
 
 	fscanf(fpr, "%s%s%X", &program_name, &mnemonic, &address); /*Reading data from input.txt*/
