@@ -75,28 +75,6 @@ int parseCFG(struct CFG *cfg, const char *input, const char *nonTerminal)
 	return 0; // Unable to parse
 }
 
-int main()
-{
-	struct CFG cfg;
-	cfg.numRules = 0;
-
-	loadCFG(&cfg, "cfg.txt");
-
-	const char *inputString = "for (int i = 0; i < 10; i++) { printf('Hello, world!'); }";
-	int result = parseCFG(&cfg, inputString, "program");
-
-	if (result)
-	{
-		printf("Input string matches CFG.\n");
-	}
-	else
-	{
-		printf("Input string does not match CFG.\n");
-	}
-
-	return 0;
-}
-
 /**
  * cfg.txt
  *
@@ -115,3 +93,43 @@ int main()
  * data_type   ::= "int" | "float" | "char"
  * constant    ::= integer_constant | real_constant | string_literal
  */
+
+// Function to print the loaded CFG
+void printCFG(struct CFG *cfg)
+{
+	printf("Loaded CFG:\n");
+	for (int i = 0; i < cfg->numRules; i++)
+	{
+		printf("%s ::= ", cfg->rules[i].nonTerminal);
+		for (int j = 0; j < cfg->rules[i].numSymbols; j++)
+		{
+			printf("%s ", cfg->rules[i].production[j]);
+		}
+		printf("\n");
+	}
+}
+
+int main()
+{
+	struct CFG cfg;
+	cfg.numRules = 0;
+
+	loadCFG(&cfg, "cfg.txt");
+
+	// Print the loaded CFG
+	printCFG(&cfg);
+
+	const char *inputString = "for (int i = 0; i < 10; i++) { printf('Hello, world!'); }";
+	int result = parseCFG(&cfg, inputString, "program");
+
+	if (result)
+	{
+		printf("Input string matches CFG.\n");
+	}
+	else
+	{
+		printf("Input string does not match CFG.\n");
+	}
+
+	return 0;
+}
