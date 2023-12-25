@@ -1,0 +1,36 @@
+Pseudocode:
+    1. Initialize an empty SymbolTable
+    2. Open the source code file
+    3. Call Tokenize function to convert the source code into a TokenArray
+    4. For each token in the TokenArray:
+        1. If the token is a valid identifier, add it to the variables in the SymbolTable
+        2. If the token is a function, add it to the functions in the SymbolTable
+    5. Load the CFG (Context-Free Grammar) from a file
+    6. Parse the CFG using the input source code and the start symbol of the CFG
+    7. Generate the output code or execute the AST directly
+
+Flowchart:
+    Start
+        |
+        V
+    Initialize SymbolTable
+        |
+        V
+    Open Source Code File
+        |
+        V
+    Tokenize Source Code --> Convert into TokenArray
+        |
+        V
+    For each token in TokenArray --> Add to SymbolTable
+        |
+        V
+    Load CFG from file
+        |
+        V
+    Parse CFG with input source code and start symbol
+        |
+        V
+    Generate Output Code or Execute AST
+        |
+    End
