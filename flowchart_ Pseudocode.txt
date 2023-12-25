@@ -7,7 +7,7 @@ Pseudocode:
         2. If the token is a function, add it to the functions in the SymbolTable
     5. Load the CFG (Context-Free Grammar) from a file
     6. Parse the CFG using the input source code and the start symbol of the CFG
-    7. Generate the output code or execute the AST directly
+
 
 Flowchart:
     Start
@@ -29,8 +29,4 @@ Flowchart:
         |
         V
     Parse CFG with input source code and start symbol
-        |
-        V
-    Generate Output Code or Execute AST
-        |
     End

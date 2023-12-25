@@ -153,82 +153,6 @@ ExprNode *parseExpression()
 	}
 }
 
-// Function to parse a statement
-
-StmtNode *parseStatement(SymbolTable *symbolTable)
-{
-	// Get the next token
-	char *token = getNextToken();
-
-	// Check if the token is an identifier
-	if (!isIdentifier(token))
-	{
-		printf("Error: Expected identifier, got %s\n", token);
-		return NULL;
-	}
-
-	// Create a StmtNode
-	StmtNode *stmtNode = (StmtNode *)malloc(sizeof(StmtNode));
-	stmtNode->type = strdup("assignment");
-	stmtNode->expression = (ExprNode *)malloc(sizeof(ExprNode));
-
-	// Store the identifier in the expression node
-	stmtNode->expression->identifier = strdup(token);
-
-	// Get the next token
-	token = getNextToken();
-
-	// Check if the token is an equals sign
-	if (strcmp(token, "=") != 0)
-	{
-		printf("Error: Expected =, got %s\n", token);
-		return NULL;
-	}
-
-	// Parse the expression after the equals sign
-	stmtNode->expression->left = parseExpression();
-
-	// Get the next token
-	token = getNextToken();
-
-	// Check if the token is a semicolon
-	if (strcmp(token, ";") != 0)
-	{
-		printf("Error: Expected ;, got %s\n", token);
-		return NULL;
-	}
-
-	// Check for variable declaration
-	if (strcmp(token, "int") == 0 || strcmp(token, "float") == 0 || strcmp(token, "char") == 0)
-	{
-		// Check if the variable is already declared
-		if (checkVariableInSymbolTable(symbolTable, stmtNode->expression->identifier))
-		{
-			printf("Error: Variable '%s' is already declared.\n", stmtNode->expression->identifier);
-			exit(1);
-		}
-
-		// Add the variable to the symbol table
-		addToSymbolTable(symbolTable, stmtNode->expression->identifier, token);
-	}
-
-	// Check for function declaration
-	if (strcmp(token, "function") == 0)
-	{
-		// Check if the function is already declared
-		if (checkFunctionInSymbolTable(symbolTable, stmtNode->expression->identifier, stmtNode->expression->left->type))
-		{
-			printf("Error: Function '%s' is already declared.\n", stmtNode->expression->identifier);
-			exit(1);
-		}
-
-		// Add the function to the symbol table
-		addToSymbolTable(symbolTable, stmtNode->expression->identifier, stmtNode->expression->left->type);
-	}
-
-	return stmtNode;
-}
-
 #define MAX_TOKENS 100
 
 char *tokenStack[MAX_TOKENS];
@@ -303,54 +227,6 @@ bool isNumber(const char *str)
 	return true;
 }
 
-ExprNode *parseExpression()
-{
-	char *token = getNextToken();
-
-	// Expect a number
-	if (token == NULL || !isNumber(token))
-	{
-		printf("Error: Expected number, got '%s'\n", token);
-		return NULL;
-	}
-
-	// Create an expression node for the number
-	ExprNode *exprNode = (ExprNode *)malloc(sizeof(ExprNode));
-	exprNode->operation = '\0'; // No operation for a number
-	exprNode->value = atoi(token);
-	exprNode->identifier = NULL; // No identifier for a number
-	exprNode->left = NULL;
-	exprNode->right = NULL;
-
-	token = getNextToken();
-
-	// Check for an operator
-	if (token != NULL && (strcmp(token, "+") == 0 || strcmp(token, "*") == 0))
-	{
-		// Create an expression node for the operator
-		ExprNode *opNode = (ExprNode *)malloc(sizeof(ExprNode));
-		opNode->operation = token[0]; // Assume token is a single char
-		opNode->value = 0;			  // No value for an operator
-		opNode->identifier = NULL;	  // No identifier for an operator
-		opNode->left = exprNode;
-
-		// Parse the right operand
-		opNode->right = parseExpression();
-		if (opNode->right == NULL)
-		{
-			free(opNode);
-			return NULL;
-		}
-
-		return opNode;
-	}
-	else
-	{
-		// No operator, so unget the token and return the number
-		ungetToken(token);
-		return exprNode;
-	}
-}
 StmtNode *parseAssignmentStatement(SymbolTable *symbolTable)
 {
 	char *token = getNextToken();
@@ -505,39 +381,6 @@ StmtNode *parseStatement(SymbolTable *symbolTable)
 	}
 }
 
-// Recursive descent parsing for the entire program
-ProgramNode *parseProgram()
-{
-	ProgramNode *programNode = (ProgramNode *)malloc(sizeof(ProgramNode));
-	programNode->statements = (StmtNode **)malloc(sizeof(StmtNode *) * MAX_LENGTH);
-	programNode->numStatements = 0;
-
-	char *token = getNextToken();
-
-	// Parse statements until the end of the program
-	while (token != NULL)
-	{
-		ungetToken(token);
-
-		// Parse the next statement
-		StmtNode *stmtNode = parseStatement();
-		if (stmtNode == NULL)
-		{
-			printf("Error: Failed to parse statement\n");
-			free(programNode);
-			return NULL;
-		}
-
-		// Add the statement to the program
-		programNode->statements[programNode->numStatements] = stmtNode;
-		programNode->numStatements++;
-
-		token = getNextToken();
-	}
-
-	return programNode;
-}
-
 // Function to create a new expression node
 ExprNode *createExprNode(char op, int val, const char *id)
 {
@@ -562,94 +405,62 @@ void freeExprTree(ExprNode *root)
 	}
 }
 
-// Function to parse an expression and build a parse tree
-ExprNode *parseExpression()
-{
-	// Assume getNextToken() returns the next token in the input
-
-	// Get the first token
-	const char *token = getNextToken();
-
-	// Check if the token is an identifier or constant
-	if (isIdentifier(token))
-	{
-		return createExprNode('\0', 0, token);
-	}
-	else if (isConstant(token))
-	{
-		int value = atoi(token);
-		return createExprNode('\0', value, NULL);
-	}
-
-	// If the token is an operator, create a node for the operator
-	if (isOperator(token[0]))
-	{
-		return createExprNode(token[0], 0, NULL);
-	}
-
-	// Handle parentheses
-	if (strcmp(token, "(") == 0)
-	{
-		ExprNode *node = parseExpression(); // Parse the expression within parentheses
-		// Ensure the next token is ")"
-		if (strcmp(getNextToken(), ")") != 0)
-		{
-			// Handle error: mismatched parentheses
-			printf("Error: Mismatched parentheses\n");
-			freeExprTree(node);
-			return NULL;
-		}
-		return node;
-	}
-
-	// Handle other cases as needed based on your grammar
-
-	// If none of the above cases match, there's an error
-	printf("Error: Invalid expression\n");
-	return NULL;
-}
-
 int main()
 {
 	// Test createExpressionNode
 	ExprNode *node = createExpressionNode('+', 0, NULL);
-	if (node == NULL || node->operation != '+') {
+	if (node == NULL || node->operation != '+')
+	{
 		printf("createExpressionNode failed\n");
-	} else {
+	}
+	else
+	{
 		printf("createExpressionNode passed\n");
 	}
 	free(node);
 
 	// Test isIdentifier
 	int result = isIdentifier("myVar");
-	if (result != 1) {
+	if (result != 1)
+	{
 		printf("isIdentifier failed\n");
-	} else {
+	}
+	else
+	{
 		printf("isIdentifier passed\n");
 	}
 
 	// Test isConstant
 	result = isConstant("123");
-	if (result != 1) {
+	if (result != 1)
+	{
 		printf("isConstant failed\n");
-	} else {
+	}
+	else
+	{
 		printf("isConstant passed\n");
 	}
 
 	// Test getNextToken
 	char *token = getNextToken();
-	if (token == NULL) {
+	if (token == NULL)
+	{
 		printf("getNextToken failed\n");
-	} else {
+	}
+	else
+	{
 		printf("getNextToken passed\n");
 	}
 	free(token);
 
 	// Test parseStatement
 	StmtNode *stmt = parseStatement();
-	if (stmt == NULL) {
+	if (stmt == NULL)
+	{
 		printf("parseStatement failed\n");
-	} else {
+	}
+	else
+	{
 		printf("parseStatement passed\n");
 	}
 	free(stmt);
@@ -659,18 +470,24 @@ int main()
 
 	// Test parseProgram
 	ProgramNode *program = parseProgram();
-	if (program == NULL) {
+	if (program == NULL)
+	{
 		printf("parseProgram failed\n");
-	} else {
+	}
+	else
+	{
 		printf("parseProgram passed\n");
 	}
 	free(program);
 
 	// Test createExprNode
 	ExprNode *expr = createExprNode('*', 123, "myVar");
-	if (expr == NULL || expr->operation != '*') {
+	if (expr == NULL || expr->operation != '*')
+	{
 		printf("createExprNode failed\n");
-	} else {
+	}
+	else
+	{
 		printf("createExprNode passed\n");
 	}
 	free(expr);
@@ -683,18 +500,24 @@ int main()
 
 	// Test parseExpression
 	ExprNode *parsedExpr = parseExpression();
-	if (parsedExpr == NULL) {
+	if (parsedExpr == NULL)
+	{
 		printf("parseExpression failed\n");
-	} else {
+	}
+	else
+	{
 		printf("parseExpression passed\n");
 	}
 	freeExprTree(parsedExpr);
 
 	// Test parsePrintStatement
 	StmtNode *printStmt = parsePrintStatement();
-	if (printStmt == NULL) {
+	if (printStmt == NULL)
+	{
 		printf("parsePrintStatement failed\n");
-	} else {
+	}
+	else
+	{
 		printf("parsePrintStatement passed\n");
 	}
 	free(printStmt);
