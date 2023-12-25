@@ -172,6 +172,25 @@ int checkFunctionInSymbolTable(SymbolTable *symbolTable, const char *name, const
 // Modify parseStatement function in parse_tree.cpp to handle semantic analysis
 StmtNode *parseStatement(SymbolTable *symbolTable);
 
+// Function to initialize the symbol table
+void initializeSymbolTable(SymbolTable *symbolTable);
+
+// Function to add a variable or function to the symbol table
+void addToSymbolTable(SymbolTable *symbolTable, const char *name, const char *type);
+
+// Function to check if a variable is already in the symbol table
+int checkVariableInSymbolTable(SymbolTable *symbolTable, const char *name);
+
+// Function to check if a function is already in the symbol table
+int checkFunctionInSymbolTable(SymbolTable *symbolTable, const char *name, const char *returnType);
+
+// Function to perform semantic analysis on a statement
+StmtNode *parseStatement(SymbolTable *symbolTable);
+
 // semantic_analyzer.cpp
+void initializeSymbolTable(SymbolTable *symbolTable);
+void addToSymbolTable(SymbolTable *symbolTable, const char *name, const char *type);
+int checkVariableInSymbolTable(SymbolTable *symbolTable, const char *name);
+int checkFunctionInSymbolTable(SymbolTable *symbolTable, const char *name, const char *returnType);
 
 #endif

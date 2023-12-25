@@ -613,57 +613,67 @@ int main()
 {
 	// Test createExpressionNode
 	ExprNode *node = createExpressionNode('+', 0, NULL);
-	printf("createExpressionNode: %c\n", node->operation);
-	free(node); // Don't forget to free the memory!
+	if (node == NULL || node->operation != '+') {
+		printf("createExpressionNode failed\n");
+	} else {
+		printf("createExpressionNode passed\n");
+	}
+	free(node);
 
 	// Test isIdentifier
-	printf("isIdentifier(\"myVar\"): %d\n", isIdentifier("myVar"));
+	int result = isIdentifier("myVar");
+	if (result != 1) {
+		printf("isIdentifier failed\n");
+	} else {
+		printf("isIdentifier passed\n");
+	}
 
 	// Test isConstant
-	printf("isConstant(\"123\"): %d\n", isConstant("123"));
+	result = isConstant("123");
+	if (result != 1) {
+		printf("isConstant failed\n");
+	} else {
+		printf("isConstant passed\n");
+	}
 
 	// Test getNextToken
 	char *token = getNextToken();
-	printf("getNextToken: %s\n", token);
-	free(token); // Don't forget to free the memory!
+	if (token == NULL) {
+		printf("getNextToken failed\n");
+	} else {
+		printf("getNextToken passed\n");
+	}
+	free(token);
 
 	// Test parseStatement
 	StmtNode *stmt = parseStatement();
-	if (stmt != NULL)
-	{
-		printf("parseStatement: %s\n", stmt->type);
-		free(stmt); // Don't forget to free the memory!
+	if (stmt == NULL) {
+		printf("parseStatement failed\n");
+	} else {
+		printf("parseStatement passed\n");
 	}
-	else
-	{
-		printf("parseStatement: NULL\n");
-	}
+	free(stmt);
 
 	// Test ungetToken
 	ungetToken("myToken");
 
 	// Test parseProgram
 	ProgramNode *program = parseProgram();
-	if (program != NULL)
-	{
-		printf("parseProgram: %d statements\n", program->numStatements);
-		// Don't forget to free the memory!
-		for (int i = 0; i < program->numStatements; i++)
-		{
-			free(program->statements[i]);
-		}
-		free(program->statements);
-		free(program);
+	if (program == NULL) {
+		printf("parseProgram failed\n");
+	} else {
+		printf("parseProgram passed\n");
 	}
-	else
-	{
-		printf("parseProgram: NULL\n");
-	}
+	free(program);
 
 	// Test createExprNode
 	ExprNode *expr = createExprNode('*', 123, "myVar");
-	printf("createExprNode: %c\n", expr->operation);
-	free(expr); // Don't forget to free the memory!
+	if (expr == NULL || expr->operation != '*') {
+		printf("createExprNode failed\n");
+	} else {
+		printf("createExprNode passed\n");
+	}
+	free(expr);
 
 	// Test freeExprTree
 	ExprNode *root = createExprNode('+', 0, NULL);
@@ -673,27 +683,21 @@ int main()
 
 	// Test parseExpression
 	ExprNode *parsedExpr = parseExpression();
-	if (parsedExpr != NULL)
-	{
-		printf("parseExpression: %c\n", parsedExpr->operation);
-		freeExprTree(parsedExpr); // Don't forget to free the memory!
+	if (parsedExpr == NULL) {
+		printf("parseExpression failed\n");
+	} else {
+		printf("parseExpression passed\n");
 	}
-	else
-	{
-		printf("parseExpression: NULL\n");
-	}
+	freeExprTree(parsedExpr);
 
 	// Test parsePrintStatement
 	StmtNode *printStmt = parsePrintStatement();
-	if (printStmt != NULL)
-	{
-		printf("parsePrintStatement: %s\n", printStmt->type);
-		free(printStmt); // Don't forget to free the memory!
+	if (printStmt == NULL) {
+		printf("parsePrintStatement failed\n");
+	} else {
+		printf("parsePrintStatement passed\n");
 	}
-	else
-	{
-		printf("parsePrintStatement: NULL\n");
-	}
+	free(printStmt);
 
 	return 0;
 }

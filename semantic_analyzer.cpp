@@ -48,3 +48,29 @@ int checkFunctionInSymbolTable(SymbolTable *symbolTable, const char *name, const
 	}
 	return 0; // Function not found
 }
+
+int main() {
+	// Initialize the symbol table
+	SymbolTable symbolTable;
+	initializeSymbolTable(&symbolTable);
+
+	// Add a variable and a function to the symbol table
+	addToSymbolTable(&symbolTable, "myVar", "variable");
+	addToSymbolTable(&symbolTable, "myFunc", "function");
+
+	// Check if the variable is in the symbol table
+	if (checkVariableInSymbolTable(&symbolTable, "myVar")) {
+		printf("Variable 'myVar' found in the symbol table.\n");
+	} else {
+		printf("Variable 'myVar' not found in the symbol table.\n");
+	}
+
+	// Check if the function is in the symbol table
+	if (checkFunctionInSymbolTable(&symbolTable, "myFunc", "function")) {
+		printf("Function 'myFunc' found in the symbol table.\n");
+	} else {
+		printf("Function 'myFunc' not found in the symbol table.\n");
+	}
+
+	return 0;
+}
