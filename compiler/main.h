@@ -150,10 +150,6 @@ void ungetToken(char *token);
 // Function to parse the entire program
 ProgramNode *parseProgram();
 
-// for parse_tree.cpp
-
-// Function to create a new expression node
-ExprNode *createExprNode(char op, int val, const char *id);
 // Function to free the memory used by an expression tree
 void freeExprTree(ExprNode *root);
 // Function to parse an expression
